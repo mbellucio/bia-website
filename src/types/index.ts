@@ -1,15 +1,34 @@
 import { z } from "zod";
 
-export const messageSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  content: z.string().min(5, "Message must be at least 5 characters"),
+export const createUserSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .optional(),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-export type MessageFormData = z.infer<typeof messageSchema>;
+export const updateUserSchema = z.object({
+  email: z.string().email("Invalid email address").optional(),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .optional(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .optional(),
+  active: z.boolean().optional(),
+});
 
-export type Message = {
+export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+
+export type User = {
   id: number;
-  name: string;
-  content: string;
+  email: string;
+  username: string | null;
+  active: boolean;
   createdAt: Date;
 };
